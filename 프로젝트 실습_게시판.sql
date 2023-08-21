@@ -4,6 +4,8 @@
 
 CREATE DATABASE `Jboard`;
 
+USE `Jboard`;
+
 CREATE TABLE `User`(
 		`uid`				VARCHAR(20) PRIMARY KEY,
 		`pass`			VARCHAR(255),
@@ -13,12 +15,19 @@ CREATE TABLE `User`(
 		`hp`				CHAR(13) UNIQUE,
 		`role`			VARCHAR(20) DEFAULT 'USER',
 		`zip`				CHAR(5),
-		`add1`			VARCHAR(255),
-		`add2`			VARCHAR(255),
+		`addr1`			VARCHAR(255),
+		`addr2`			VARCHAR(255),
 		`regip`			VARCHAR(100),
 		`regDate`		DATETIME,
 		`leaveDate`		DATETIME
 		);	
+
+# 칼럼명 변경 		
+ALTER TABLE `User`
+RENAME COLUMN `add1` TO `addr1`;
+
+ALTER TABLE `User`
+RENAME COLUMN `add2` TO `addr2`;
 		
 CREATE TABLE `Article`(
 		`no`				INT AUTO_INCREMENT PRIMARY KEY,
@@ -42,7 +51,7 @@ CREATE TABLE `File`(
 		`newName`		VARCHAR(255)	NOT NULL,
 		`download`		INT	DEFAULT 0,
 		`rdate`			DATETIME	NOT NULL,
-		FOREIGN KEY(`ano`) REFERENCES `article`(`no`)
+		FOREIGN KEY(`ano`) REFERENCES `Article`(`no`)
 );
 
 CREATE TABLE `Terms`(
@@ -51,3 +60,33 @@ CREATE TABLE `Terms`(
 );
 
 SELECT COUNT(*) FROM `User` WHERE `uid`=?
+
+
+
+
+SELECT COUNT(*) FROM `User` WHERE `nick`= '길동이';
+
+SELECT * FROM `User` WHERE `uid`='a101' AND `pass`=SHA2('1234',256);
+
+INSERT INTO `Article` SET `title`=(SELECT * FROM ~)
+
+SELECT a.*, b.`nick` FROM `Article` AS a
+JOIN `User` AS b ON a.writer = b.uid
+WHERE `parent`='';
+
+ORDER BY `no` DESC
+LIMIT 0, 10;
+
+#게시물 채우기
+INSERT INTO `Article` (`title`, `content`, `writer`, `regip`, `rdate`)
+SELECT `title`, `content`, `writer`, `regip`, `rdate` FROM `Article`;
+
+# 전체 게시물 갯수
+SELECT COUNT (*) FROM `Article`;
+SELECT * FROM `Article`;
+DELETE FROM `Article`; # Article 데이터 삭제
+SELECT * FROM `Article` WHERE `no`='';
+
+
+
+
